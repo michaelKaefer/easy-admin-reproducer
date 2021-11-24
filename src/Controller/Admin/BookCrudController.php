@@ -21,11 +21,12 @@ class BookCrudController extends AbstractCrudController
         return [
             TextField::new('title'),
             AssociationField::new('category'),
+            AssociationField::new('tags'),
         ];
     }
 
     public function configureFilters(Filters $filters): Filters
     {
-        return $filters->add(EntityFilter::new('category'));
+        return $filters->add(EntityFilter::new('category'))->add(EntityFilter::new('tags'));
     }
 }

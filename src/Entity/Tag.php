@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\BookRepository;
+use App\Repository\TagRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,9 +10,9 @@ use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Component\Uid\Uuid;
 
 /**
- * @ORM\Entity(repositoryClass=BookRepository::class)
+ * @ORM\Entity(repositoryClass=TagRepository::class)
  */
-class Book
+class Tag
 {
     /**
      * @ORM\Id
@@ -28,19 +28,18 @@ class Book
     private $title;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="books")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToMany(targetEntity=Book::class, mappedBy="tags")
      */
-    private $category;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="books")
-     */
-    private $tags;
+    private $books;
 
     public function __construct()
     {
-        $this->tags = new ArrayCollection();
+        $this->books = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->title;
     }
 
     public function getId(): ?Uuid
@@ -60,38 +59,29 @@ class Book
         return $this;
     }
 
-    public function getCategory(): ?Category
-    {
-        return $this->category;
-    }
-
-    public function setCategory(?Category $category): self
-    {
-        $this->category = $category;
-
-        return $this;
-    }
-
     /**
-     * @return Collection|Tag[]
+     * @return Collection|Book[]
      */
-    public function getTags(): Collection
+    public function getBooks(): Collection
     {
-        return $this->tags;
+        return $this->books;
     }
 
-    public function addTag(Tag $tag): self
+    public function addBook(Book $book): self
     {
-        if (!$this->tags->contains($tag)) {
-            $this->tags[] = $tag;
+        if (!$this->books->contains($book)) {
+            $this->books[] = $book;
+            $book->addTag($this);
         }
 
         return $this;
     }
 
-    public function removeTag(Tag $tag): self
+    public function removeBook(Book $book): self
     {
-        $this->tags->removeElement($tag);
+        if ($this->books->removeElement($book)) {
+            $book->removeTag($this);
+        }
 
         return $this;
     }
