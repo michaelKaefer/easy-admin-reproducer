@@ -1,0 +1,5 @@
+{% if field.value is null %}
+    -
+{% else %}
+    <a href="tel:{{ field.value|phone_number_format('INTERNATIONAL') }}">{{ field.value|phone_number_format('INTERNATIONAL') }}</a>
+{% endif %}
