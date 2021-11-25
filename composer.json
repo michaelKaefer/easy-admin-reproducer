@@ -1,14 +1,5 @@
 {
     "minimum-stability": "dev",
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../EasyAdminBundle",
-            "options": {
-                "symlink": true
-            }
-        }
-    ],
     "type": "project",
     "license": "proprietary",
     "prefer-stable": true,
